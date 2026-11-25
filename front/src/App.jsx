@@ -1,24 +1,26 @@
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
+import CargaTrabajoPage from "./pages/CargaTrabajoPage";
+import PendientesPage from "./pages/PendientesPage";
+import TurnosPage from "./pages/TurnosPage";
+import PresupuestoPage from "./pages/PresupuestoPage";
 import BottomNav from "./components/BottomNav";
+import ModuloHeader from "./components/ModuloHeader";
 
-function ModuloEnEspera({ titulo, onVolver }) {
+function ModuloPlaceholder({ titulo, colorTitulo, onSalir }) {
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-center space-y-3">
-      <h2 className="text-base font-bold text-white">{titulo}</h2>
-      <p className="text-xs text-slate-400">
-        Módulo listo para codear en el próximo paso.
-      </p>
-      <button
-        type="button"
-        onClick={onVolver}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-400 hover:text-sky-300 pt-1"
-      >
-        <ArrowLeft className="w-3.5 h-3.5" />
-        Volver al inicio
-      </button>
+    <div className="w-full">
+      <ModuloHeader
+        titulo={titulo}
+        onSalir={onSalir}
+        colorTitulo={colorTitulo}
+      />
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-center">
+        <span className="text-xs font-semibold text-slate-400">
+          Listo para implementar
+        </span>
+      </div>
     </div>
   );
 }
@@ -31,36 +33,25 @@ export default function App() {
     return <LoginPage onSuccess={() => setAutenticado(true)} />;
   }
 
+  const volverInicio = () => setTab("home");
+
   return (
-    <div className="min-h-dvh bg-slate-950 text-white pb-20">
-      <main className="max-w-md mx-auto px-4 pt-4">
-        {tab === "home" && (
-          <HomePage onNavigate={(destino) => setTab(destino)} />
-        )}
-        {tab === "presupuesto" && (
-          <ModuloEnEspera
-            titulo="Presupuesto PDF"
-            onVolver={() => setTab("home")}
-          />
-        )}
-        {tab === "turnos" && (
-          <ModuloEnEspera
-            titulo="Agenda de Turnos"
-            onVolver={() => setTab("home")}
-          />
-        )}
-        {tab === "carga" && (
-          <ModuloEnEspera
-            titulo="Carga de Trabajo"
-            onVolver={() => setTab("home")}
-          />
-        )}
-        {tab === "pendientes" && (
-          <ModuloEnEspera
-            titulo="Pagos Pendientes"
-            onVolver={() => setTab("home")}
-          />
-        )}
+    <div className="min-h-dvh bg-slate-950 text-white">
+      <main className="max-w-md mx-auto min-h-dvh px-4 pt-16 pb-20 flex flex-col justify-center">
+        <div className="w-full">
+          {tab === "home" && (
+            <HomePage
+              onCerrarSesion={() => {
+                setTab("home");
+                setAutenticado(false);
+              }}
+            />
+          )}
+          {tab === "presupuesto" && <PresupuestoPage onSalir={volverInicio} />}
+          {tab === "turnos" && <TurnosPage onSalir={volverInicio} />}
+          {tab === "carga" && <CargaTrabajoPage onSalir={volverInicio} />}
+          {tab === "pendientes" && <PendientesPage onSalir={volverInicio} />}
+        </div>
       </main>
 
       <BottomNav activeTab={tab} onSelect={(id) => setTab(id)} />

@@ -18,9 +18,9 @@ router.post("/", async (req, res) => {
   try {
     const { cliente, fecha, direccion } = req.body;
 
-    if (!cliente || !fecha || !direccion) {
+    if (!cliente || !fecha) {
       return res.status(400).json({
-        error: "Faltan datos obligatorios (cliente, fecha, direccion)",
+        error: "Faltan datos obligatorios",
       });
     }
 
@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
       id: `t-${Date.now()}`,
       cliente: cliente.trim(),
       fecha,
-      direccion: direccion.trim(),
+      direccion: (direccion || "").trim(),
     };
 
     const actualizados = [...data, nuevoTurno];
